@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ender's Realm - 终界珍珠的领地</title>
+    <style>
+        :root {
+            --mc-dark-green: #1b511d;
+            --mc-green: #5b7c3d;
+            --mc-light-green: #89b53f;
+            --mc-brown: #6e4a3f;
+            --mc-dark-brown: #4c3223;
+            --mc-blue: #3c44a9;
+            --mc-dark-blue: #232c66;
+            --mc-black: #1a1a1a;
+            --mc-gray: #7d7d7d;
+            --mc-light-gray: #c4c4c4;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Minecraft', 'Segoe UI', sans-serif;
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+            background-color: var(--mc-black);
+            background-image: url('https://i.imgur.com/JuD7QZ7.png');
+            background-attachment: fixed;
+            background-size: cover;
+            image-rendering: pixelated;
+        }
+        
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('https://assets.codepen.io/1538474/Minecraft.ttf') format('truetype');
+        }
+        
+        /* 顶栏样式 - 末地石砖风格 */
+        .blog-header {
+            background-color: rgba(27, 27, 27, 0.9);
+            border-bottom: 4px solid var(--mc-dark-green);
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* 博客标题/logo - 末影人风格 */
+        .blog-title {
+            font-family: 'Minecraft', sans-serif;
+            font-size: 28px;
+            font-weight: normal;
+            color: var(--mc-light-green);
+            text-decoration: none;
+            text-shadow: 3px 3px 0 var(--mc-dark-green);
+            letter-spacing: 2px;
+        }
+        
+        .blog-title span {
+            color: var(--mc-blue);
+            text-shadow: 3px 3px 0 var(--mc-dark-blue);
+        }
+        
+        /* 博客导航菜单 - 按钮风格 */
+        .blog-nav {
+            display: flex;
+            list-style: none;
+        }
+        
+        .blog-nav li {
+            margin-left: 20px;
+            position: relative;
+        }
+        
+        .blog-nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+            background-color: var(--mc-brown);
+            border: 2px solid var(--mc-dark-brown);
+            border-radius: 0;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+            font-family: 'Minecraft', sans-serif;
+            display: inline-block;
+        }
+        
+        .blog-nav a:hover {
+            background-color: var(--mc-dark-brown);
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .blog-nav a.active {
+            background-color: var(--mc-dark-green);
+            border-color: var(--mc-green);
+        }
+        
+        /* 英雄区域 - 末地风格 */
+        .hero {
+            height: 500px;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://i.imgur.com/XqMzY9a.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            margin-top: 80px;
+            border-bottom: 4px solid var(--mc-blue);
+        }
+        
+        .hero-content {
+            max-width: 800px;
+        }
+        
+        .hero h1 {
+            font-family: 'Minecraft', sans-serif;
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--mc-light-green);
+            text-shadow: 4px 4px 0 var(--mc-dark-green);
+            letter-spacing: 3px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        
+        /* Minecraft风格按钮 */
+        .btn {
+            display: inline-block;
+            background-color: var(--mc-green);
+            color: white;
+            padding: 12px 30px;
+            border: 2px solid var(--mc-light-green);
+            border-radius: 0;
+            text-decoration: none;
+            font-family: 'Minecraft', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+            margin: 0 10px;
+        }
+        
+        .btn:hover {
+            background-color: var(--mc-dark-green);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-purple {
+            background-color: var(--mc-blue);
+            border-color: #6a5acd;
+        }
+        
+        .btn-purple:hover {
+            background-color: var(--mc-dark-blue);
+        }
+        
+        /* 博客主要内容区域 */
+        .blog-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 5%;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-family: 'Minecraft', sans-serif;
+            font-size: 36px;
+            display: inline-block;
+            padding-bottom: 15px;
+            color: var(--mc-light-green);
+            text-shadow: 3px 3px 0 var(--mc-dark-green);
+            letter-spacing: 2px;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--mc-blue);
+        }
+        
+        /* 文章网格布局 */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+        
+        /* 文章卡片样式 - 箱子风格 */
+        .article-card {
+            background: linear-gradient(rgba(43, 43, 43, 0.9), rgba(27, 27, 27, 0.9));
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            border: 4px solid var(--mc-brown);
+            position: relative;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            border-color: var(--mc-green);
+        }
+        
+        .article-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--mc-green);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .article-card:hover:before {
+            opacity: 1;
+        }
+        
+        .article-image {
+            height: 200px;
+            overflow: hidden;
+            border-bottom: 4px solid var(--mc-brown);
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            image-rendering: pixelated;
+        }
+        
+        .article-card:hover .article-image img {
+            transform: scale(1.05);
+        }
+        
+        .article-content {
+            padding: 25px;
+        }
+        
+        .article-category {
+            display: inline-block;
+            color: var(--mc-light-green);
+            font-family: 'Minecraft', sans-serif;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background-color: rgba(27, 81, 29, 0.3);
+            padding: 4px 10px;
+        }
+        
+        .article-title {
+            font-family: 'Minecraft', sans-serif;
+            font-size: 22px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: white;
+        }
+        
+        .article-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .article-title a:hover {
+            color: var(--mc-light-green);
+        }
+        
+        .article-excerpt {
+            color: var(--mc-light-gray);
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            color: var(--mc-gray);
+            font-size: 14px;
+            border-top: 2px solid var(--mc-brown);
+            padding-top: 15px;
+            font-family: 'Minecraft', sans-serif;
+        }
+        
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .article-meta i {
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        /* 分类区域 - 物品栏风格 */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+        
+        .category-card {
+            background: linear-gradient(rgba(43, 43, 43, 0.9), rgba(27, 27, 27, 0.9));
+            border-radius: 0;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            border: 4px solid var(--mc-brown);
+            position: relative;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            border-color: var(--mc-blue);
+        }
+        
+        .category-icon {
+            font-size: 40px;
+            color: var(--mc-light-green);
+            margin-bottom: 20px;
+        }
+        
+        .category-title {
+            font-family: 'Minecraft', sans-serif;
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .category-count {
+            color: var(--mc-gray);
+            font-size: 14px;
+            font-family: 'Minecraft', sans-serif;
+        }
+        
+        /* 页脚 - 基岩风格 */
+        .footer {
+            background: linear-gradient(rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 0.95));
+            color: var(--mc-light-gray);
+            padding: 60px 0 30px;
+            text-align: center;
+            border-top: 4px solid var(--mc-dark-brown);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+        
+        .footer-logo {
+            font-family: 'Minecraft', sans-serif;
+            font-size: 28px;
+            font-weight: normal;
+            margin-bottom: 30px;
+            color: var(--mc-light-green);
+            text-decoration: none;
+            text-shadow: 3px 3px 0 var(--mc-dark-green);
+            letter-spacing: 2px;
+            display: inline-block;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .footer-links a {
+            color: var(--mc-light-gray);
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+            font-family: 'Minecraft', sans-serif;
+            font-size: 16px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--mc-light-green);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 0;
+            background: var(--mc-brown);
+            color: white;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--mc-dark-brown);
+            font-size: 20px;
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .social-links a:hover {
+            background: var(--mc-dark-brown);
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .copyright {
+            color: var(--mc-gray);
+            font-size: 14px;
+            padding-top: 30px;
+            border-top: 2px solid var(--mc-dark-brown);
+            font-family: 'Minecraft', sans-serif;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .blog-header {
+                padding: 0 20px;
+                height: 70px;
+            }
+            
+            .blog-title {
+                font-size: 22px;
+            }
+            
+            .blog-nav li {
+                margin-left: 10px;
+            }
+            
+            .blog-nav a {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            
+            .hero {
+                height: 400px;
+                margin-top: 70px;
+            }
+            
+            .hero h1 {
+                font-size: 30px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .article-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links a {
+                margin: 0 10px 10px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 26px;
+            }
+            
+            .hero-buttons {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .btn {
+                margin: 5px 0;
+            }
+            
+            .blog-nav {
+                display: none; /* 移动端可以添加汉堡菜单 */
+            }
+            
+            .blog-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- 顶栏 - 末地石砖风格 -->
+    <header class="blog-header">
+        <a href="index.html" class="blog-title">ENDER_<span>PEARL2333</span></a>
+        <nav>
+            <ul class="blog-nav">
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="minecraft.html">Minecraft</a></li>
+                <li><a href="adofai.html">ADOFIA</a></li>
+                <li><a href="coding.html">编程</a></li>
+                <li><a href="life.html">生活</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- 英雄区域 - 末地风格 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>欢迎来到终界珍珠的领地</h1>
+            <p>这里是我的数字世界，分享我的Minecraft冒险、ADOFIA游戏体验、编程心得和生活随笔。跟随我的脚步，一起探索这个方块与音符构成的奇妙世界！</p>
+            <div class="hero-buttons">
+                <a href="minecraft.html" class="btn"><i class="fas fa-cube"></i> Minecraft</a>
+                <a href="adofai.html" class="btn btn-purple"><i class="fas fa-music"></i> ADOFIA</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 最新文章 -->
+    <section class="blog-container">
+        <div class="section-title">
+            <h2>最新文章</h2>
+        </div>
+        
+        <div class="article-grid">
+            <!-- 文章卡片1 -->
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="https://i.imgur.com/JQzLZ7U.png" alt="Minecraft建筑">
+                </div>
+                <div class="article-content">
+                    <span class="article-category">Minecraft</span>
+                    <h3 class="article-title"><a href="article.html">我的中世纪城堡建造指南</a></h3>
+                    <p class="article-excerpt">分享我在生存模式中建造中世纪城堡的完整过程，包括材料选择、建筑技巧和内饰设计，附带世界下载链接...</p>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar-alt"></i>2023-06-15</span>
+                        <span><i class="far fa-eye"></i>1.2k</span>
+                        <span><i class="far fa-comment-alt"></i>42</span>
+                    </div>
+                </div>
+            </article>
+            
+            <!-- 文章卡片2 -->
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="https://i.imgur.com/8KjQxV9.png" alt="ADOFIA游戏截图">
+                </div>
+                <div class="article-content">
+                    <span class="article-category">ADOFIA</span>
+                    <h3 class="article-title"><a href="article.html">征服ADOFIA最难关卡：黑洞</a></h3>
+                    <p class="article-excerpt">记录我挑战ADOFIA最难关卡"黑洞"的全过程，分享节奏把握技巧和手指协调训练方法，附练习心得...</p>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar-alt"></i>2023-06-08</span>
+                        <span><i class="far fa-eye"></i>856</span>
+                        <span><i class="far fa-comment-alt"></i>28</span>
+                    </div>
+                </div>
+            </article>
+            
+            <!-- 文章卡片3 -->
+            <article class="article-card">
+                <div class="article-image">
+                    <img src="https://i.imgur.com/3wJqVY7.png" alt="编程截图">
+                </div>
+                <div class="article-content">
+                    <span class="article-category">编程</span>
+                    <h3 class="article-title"><a href="article.html">用Python制作Minecraft地图解析器</a></h3>
+                    <p class="article-excerpt">教你如何使用Python解析Minecraft地图数据，提取建筑信息并生成3D预览，完整代码已开源...</p>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar-alt"></i>2023-06-01</span>
+                        <span><i class="far fa-eye"></i>1.5k</span>
+                        <span><i class="far fa-comment-alt"></i>36</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+    
+    <!-- 热门分类 -->
+    <section class="blog-container">
+        <div class="section-title">
+            <h2>热门分类</h2>
+        </div>
+        
+        <div class="categories">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3 class="category-title">Minecraft</h3>
+                <div class="category-count">32篇文章</div>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <h3 class="category-title">ADOFIA</h3>
+                <div class="category-count">18篇文章</div>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3 class="category-title">编程</h3>
+                <div class="category-count">24篇文章</div>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <h3 class="category-title">生活随笔</h3>
+                <div class="category-count">15篇文章</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 - 基岩风格 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <a href="index.html" class="footer-logo">ENDER_PEARL2333</a>
+            
+            <div class="footer-links">
+                <a href="index.html">首页</a>
+                <a href="minecraft.html">Minecraft</a>
+                <a href="adofai.html">ADOFIA</a>
+                <a href="coding.html">编程</a>
+                <a href="life.html">生活</a>
+                <a href="about.html">关于我</a>
+            </div>
+            
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-steam"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 ENDER_PEARL2333. 保留所有权利. Crafted with ♥ in Minecraft
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 滚动时改变顶栏样式
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.blog-header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.7)';
+                header.style.borderBottom = '4px solid var(--mc-blue)';
+            } else {
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.5)';
+                header.style.borderBottom = '4px solid var(--mc-dark-green)';
+            }
+        });
+    </script>
+</body>
+</html>
